@@ -13,7 +13,7 @@ def make_appointment(message):
 def get_patient_fullname(message):
     fullname = message.text
     bot.send_message(message.chat.id, "Выберите врача:", reply_markup=get_doctors_keyboard())
-    bot.register_next_step_handler(message, lambda message: get_doctor(message, fullname))
+    bot.register_next_step_handler(message, lambda message: get_data(message))
 
 
 def get_doctors_keyboard():
@@ -21,9 +21,21 @@ def get_doctors_keyboard():
     keyboard.add(KeyboardButton('Хирург'))
     keyboard.add(KeyboardButton('Стоматолог'))
     keyboard.add(KeyboardButton('Терапевт'))
-    keyboard.add(KeyboardButton(''))
     return keyboard
 
+# data
+def get_data(message):
+    fullname = message.text
+    bot.send_message(message.chat.id, "Выберите дату", reply_markup=get_doctors_data())
+    bot.register_next_step_handler(message, lambda message: get_doctor(message, fullname))
+
+def get_doctors_data():
+    dat = ReplyKeyboardMarkup(one_time_keyboard=True)
+    dat.add(KeyboardButton('2 апреля'))
+    dat.add(KeyboardButton('4 апреля'))
+    dat.add(KeyboardButton('5 апреля'))
+    return dat
+# end data
 
 def get_doctor(message, fullname):
     doctor = message.text
@@ -41,7 +53,7 @@ def get_time_keyboard():
 
 def confirm_appointment(message, fullname, doctor):
     time = message.text
-    bot.send_message(message.chat.id, f"Вы записались к {doctor} на {time} на прием. Подтвердите запись.")
+    bot.send_message(message.chat.id, f"Вы записались к {doctor} на {time} на прием.")
 
 
 @bot.message_handler(commands=['start'])
